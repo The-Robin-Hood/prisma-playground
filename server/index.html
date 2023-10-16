@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prisma Query Executor</title>
+    <!-- Include Tailwind CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="font-sans bg-gray-100 p-6 h-screen">
+    <div class="max-w-md mx-auto bg-white rounded p-6 shadow-md">
+        <h1 class="text-2xl font-bold mb-4">Prisma Query Executor</h1>
+
+        <form id="queryForm">
+            <div class="mb-4">
+                <label for="tablesInput" class="block text-sm font-medium text-gray-600">Tables:</label>
+                <input type="text" id="tablesInput" class="mt-1 p-2 w-full border rounded">
+            </div>
+
+            <div class="mb-4">
+                <label for="querySelect" class="block text-sm font-medium text-gray-600">Prisma Query:</label>
+                <select id="querySelect" class="mt-1 p-2 w-full border rounded">
+                    <option value="findMany">findMany</option>
+                    <option value="findOne">findOne</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="fieldInput" class="block text-sm font-medium text-gray-600">Field:</label>
+                <input type="text" id="fieldInput" placeholder="e.g., { where: { id: 1 } }"
+                    class="mt-1 p-2 w-full border rounded">
+            </div>
+
+            <button type="button" onclick="executeQuery()"
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Execute Query</button>
+        </form>
+    </div>
+
+    <div class="mt-5 h-full w-full bg-black opacity-90 text-white p-6 rounded shadow-md" id="result">
+    </div>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:3000');
+
+        function executeQuery() {
+            const tables = document.getElementById('tablesInput').value;
+            const query = document.getElementById('querySelect').value;
+            const field = document.getElementById('fieldInput').value;
+
+            const fullQuery = `${tables}.${query}(${field})`;
+
+            socket.send(JSON.stringify({ query: fullQuery }));
+        }
+
+        socket.onmessage = function (event) {
+            const resultDiv = document.getElementById('result');
+            const data = JSON.parse(event.data);
+
+            
+            if (data.result) {
+                data.result.forEach((item) => {
+                    const formatted = JSON.stringify(item, null, 2);
+                    resultDiv.innerHTML += `<p>${formatted}</p>`;
+                });
+            } else if (data.error) {
+                resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+            }
+        };
+    </script>
+</body>
+
+</html>
