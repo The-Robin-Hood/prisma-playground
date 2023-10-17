@@ -1,19 +1,14 @@
 {
-  "name": "test_db",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@prisma/client": "^5.4.2",
-    "ws": "^8.14.2"
-  },
+  "name": "prisma_ws_server",
+  "module": "index.ts",
+  "type": "module",
   "devDependencies": {
-    "prisma": "^5.4.2"
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.4.2"
   }
 }
