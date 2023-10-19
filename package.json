@@ -1,29 +1,28 @@
 {
-  "name": "prisma_client_page",
+  "name": "prismaplayground",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"bun server/index.ts\" \"vite --host --port 3000\"",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "start": "bun run server/index.ts"
   },
   "dependencies": {
     "@codemirror/commands": "^6.3.0",
-    "@codemirror/lang-javascript": "^6.2.1",
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/lint": "^6.4.2",
+    "@prisma/client": "^5.4.2",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@uiw/codemirror-theme-github": "^4.21.20",
-    "@uiw/codemirror-theme-vscode": "^4.21.20",
     "@uiw/react-codemirror": "^4.21.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "codemirror": "^6.0.1",
     "lucide-react": "^0.287.0",
     "pretty-print-json": "^2.0.4",
+    "prisma": "^5.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
@@ -38,6 +37,8 @@
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
     "autoprefixer": "^10.4.16",
+    "bun-types": "^1.0.6",
+    "concurrently": "^8.2.1",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
@@ -46,5 +47,6 @@
     "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
-  }
+  },
+  "module": "index.ts"
 }

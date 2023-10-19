@@ -16,6 +16,7 @@ import { json } from "@codemirror/lang-json";
 import { linter } from "@codemirror/lint";
 import { Toaster, toast } from "react-hot-toast";
 import { CheckCheck, Copy, Eraser } from "lucide-react";
+import { debounce } from "./lib/utils";
 
 const App = () => {
   const socket = useRef<WebSocket | null>(null);
@@ -25,7 +26,7 @@ const App = () => {
     setAppState((prev) => ({ ...prev, ...newState }));
 
   useEffect(() => {
-    socket.current = new WebSocket("ws://localhost:3000");
+    socket.current = new WebSocket("ws://" + window.location.host + "/server");
     socket.current.onmessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
       if (!data.status) {
@@ -99,11 +100,20 @@ const App = () => {
     return false;
   };
 
+  const updateCode = debounce((code: string) => {
+    try {
+      const formatted = JSON.stringify(JSON.parse(code), null, 2);
+      setCode(formatted);
+    } catch (e) {
+      setCode(code);
+    }
+  });
+
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-appbg flex md:gap-5 lg:gap-10 xl:gap-52 justify-center items-center">
       <div className="relative flex flex-col justify-center items-center">
         <h1 className="font-sans text-3xl text-white mb-5">
-          Prisma Query Executor
+          Prisma Playground
         </h1>
 
         <div className="flex gap-7">
@@ -143,7 +153,7 @@ const App = () => {
 
         <CodeMirror
           value={code}
-          onChange={setCode}
+          onChange={updateCode}
           className="mt-5 border"
           height="300px"
           width="500px"
@@ -160,7 +170,6 @@ const App = () => {
           }}
           extensions={[json(), linter(jsonParseLinter())]}
           placeholder={"Enter the conditions here"}
-          
         />
 
         <Button
@@ -250,6 +259,17 @@ const App = () => {
             )}
           </div>
         </div>
+      </div>
+      <div className="absolute bottom-14 font-sans font-[500]">
+        <a
+          href="https://github.com/The-Robin-Hood/prismaplayground"
+          target="_blank"
+          rel="noreferrer"
+          className="flex w-fit gap-2 items-center hover:underline underline-offset-2"
+        >
+          <span>Crafted by Ansari</span>
+          <img src="/github.svg" alt="github" className="w-5 h-5" />
+        </a>
       </div>
     </main>
   );

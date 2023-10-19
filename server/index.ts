@@ -32,7 +32,7 @@ async function executePrismaQuery(msg: ws_rmsg): Promise<ws_smsg> {
       status: true,
       result: result
     }
-  } catch (error:any) {
+  } catch (error: any) {
     return {
       error: error.message,
       status: false,
@@ -50,13 +50,31 @@ const isValidJson = (ctx: string) => {
   }
 }
 
+const basePath = "./dist";
+
 Bun.serve({
   fetch(req, server) {
-    server.upgrade(req, {});
-    return undefined;
+    const url = new URL(req.url);
+    let filePath = basePath + url.pathname;
+    if (url.pathname === "/") {
+      filePath = basePath + "/index.html";
+    }
+    if (url.pathname === "/server") {
+      server.upgrade(req, {});
+      return;
+    }
+    if (url.pathname.startsWith("/")) {
+      try {
+        const file = Bun.file(filePath);
+        return new Response(file);
+      } catch (e) {
+        return new Response("404!");
+      }
+    }
+    return new Response("404!");
   },
   websocket: {
-    async message(ws, message) {
+    async message(ws:WebSocket, message: string) {
       if (typeof message !== 'string') {
         ws.send(JSON.stringify({
           error: 'Invalid message type',
@@ -74,7 +92,7 @@ Bun.serve({
       const result = await executePrismaQuery(JSON.parse(message));
       ws.send(JSON.stringify(result));
     },
-    async open(ws) {
+    async open(ws: WebSocket) {
       const initialMessage = {
         status: true,
         availableTables,
