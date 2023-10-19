@@ -262,7 +262,7 @@ const App = () => {
       </div>
       <div className="absolute bottom-14 font-sans font-[500]">
         <a
-          href="https://github.com/The-Robin-Hood/prismaplayground"
+          href="https://github.com/The-Robin-Hood/prisma-playground"
           target="_blank"
           rel="noreferrer"
           className="flex w-fit gap-2 items-center hover:underline underline-offset-2"
