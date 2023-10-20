@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = "postgres://postgres:@localhost:5430/testdb"
+  provider = "sqlite"
+  url      = "file:./example.db"
 }
 
 model user {
