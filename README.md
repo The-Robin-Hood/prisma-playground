@@ -22,7 +22,7 @@ To set up the project, follow these steps:
 3. Generate Prisma client:
 
    ```bash
-   prisma generate
+   bun prisma generate  #replace the prisma.schema file or else it will inititate with example.db
    ```
 
 4. Build the project:
